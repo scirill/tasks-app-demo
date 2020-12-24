@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div>
         <v-container fluid>
             <div class="text-lg-h5 pb-3">{{ board }} Board</div>
             <v-row v-if="isLoading">
@@ -11,12 +11,11 @@
                     ></v-progress-circular>
                 </div>
             </v-row>
-            <v-row v-else style="min-height: 50vh">
+            <v-row v-else class="board">
                 <v-col v-for="group in groupedTasks" :key="group.title"
                        class="bg-gray-100 rounded-lg column-width rounded mx-2">
                     <div class="d-flex justify-space-between">
-                        <span
-                            class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{ group.title }}</span>
+                        <span class="text-subtitle-1">{{ group.title }}</span>
                         <v-btn icon @click="onAddNewTask(group.status)">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
@@ -40,12 +39,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TaskCard from "./TaskCard.vue";
-import {db} from '@/db'
+import Vue from 'vue';
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
+import TaskCard from './TaskCard.vue';
 import {CloudManager} from '@/helpers/CloudManager';
+import {db} from '@/db'
+
 
 export default Vue.extend({
     name: 'Board',
@@ -111,5 +111,8 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.board {
+    min-height: 50vh;
+}
 
 </style>
