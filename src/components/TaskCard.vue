@@ -1,21 +1,20 @@
 <template>
     <v-hover :close-delay="100" :open-delay="100" v-slot="{ hover }">
-        <v-card elevation="0" outlined @mouseleave="editMode = false" style="min-height: 100px">
+        <v-card class="card" elevation="0" outlined @mouseleave="editMode = false">
             <v-card-text @dblclick="editMode = true">
                 <div v-if="editMode && hover">
                     <v-textarea v-model="descriptionInEditMode"
                                 label="Edit"
                                 auto-grow
                                 outlined
-                                rows="1"
-                                row-height="15">
+                                rows="1">
                     </v-textarea>
                     <div class="d-flex justify-end">
                         <v-btn text color="primary" @click="onDescriptionChanged">Save</v-btn>
                         <v-btn text color="primary" @click="onDescriptionEditCanceled">Cancel</v-btn>
                     </div>
                 </div>
-                <span v-else>{{ task.description }}</span>
+                <p v-else>{{ task.description }}</p>
             </v-card-text>
             <div v-if="hover && !editMode" class="d-flex justify-end">
                 <div>
@@ -66,3 +65,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.card {
+    min-height: 100px;
+}
+</style>
