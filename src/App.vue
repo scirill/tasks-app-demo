@@ -12,6 +12,8 @@
 import Vue from "vue";
 import Board from "./components/Board.vue";
 
+
+//Main component to show two board
 export default Vue.extend({
     name: 'App',
     components: {

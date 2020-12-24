@@ -34,8 +34,13 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 
-export default {
+/**
+ * show the task, allows to edit the description,
+ * can fire events statusRight, statusLeft, delete and descriptionChanged.
+ */
+export default Vue.extend({
     props: {
         task: {
             type: Object,
@@ -55,7 +60,8 @@ export default {
         }
     },
     mounted() {
-        this.descriptionInEditMode = this.task.description;
+        const task = this.task as Task;
+        this.descriptionInEditMode = task.description;
     },
     data() {
         return {
@@ -63,7 +69,7 @@ export default {
             descriptionInEditMode: ''
         }
     },
-};
+});
 </script>
 
 <style scoped>

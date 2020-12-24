@@ -47,6 +47,12 @@ import {CloudManager} from '@/helpers/CloudManager';
 import {db} from '@/db'
 
 
+/**
+ * Board component, can show all the tasks of one board,
+ * the tasks are synced with firebase, on every change at the component,
+ * the Board uses cloudManager to send sync update the cloud, but it is locally refreshed before the actual
+ * update happen at the db level.
+ */
 export default Vue.extend({
     name: 'Board',
     components: {
@@ -59,10 +65,10 @@ export default Vue.extend({
     },
     methods: {
         onAddNewTask(status: number) {
-            this.cloudManager.addNewTask(status);
+            this.cloudManager.addNewTask(status, 'New Task');
         },
         onStatusRight(task: Task) {
-            if (task.status < 3) {
+            if (task.status < this.sections.length - 1) {
                 this.cloudManager.updateStatus(task.id, task.status.valueOf() + 1);
             }
         },
@@ -74,37 +80,48 @@ export default Vue.extend({
         onDeleteTask(task: Task) {
             this.cloudManager.removeTask(task.id);
         },
-        onUpdateDescription(payload: any) {
+        onUpdateDescription(payload: UpdateDescriptionPayload) {
             this.cloudManager.updateDescription(payload.id, payload.description);
         },
     },
 
     computed: {
+        //return the grouped tasks to display, each group has name of the section and its relevant tasks
         groupedTasks(): TaskGroup[] {
-            const grouped = groupBy(this.documents, 'status', 'desc');
 
+            //first group all the tasks by status
+            const grouped = groupBy(this.documents, 'status');
+
+            //sort the task by the time created
             function getOrderedTasks(tasks: Task[] = []) {
                 return orderBy(tasks, 'timeCreated');
             }
 
-            const groups = [{title: 'Candidates', status: 0, tasks: getOrderedTasks(grouped[0])},
-                {title: 'In Progress', status: 1, tasks: getOrderedTasks(grouped[1])},
-                {title: 'QA / Code review', status: 2, tasks: getOrderedTasks(grouped[2])},
-                {title: 'Completed', status: 3, tasks: getOrderedTasks(grouped[3])}];
-
+            const groups: TaskGroup[] = [];
+            for (let i = 0; i < this.sections.length ; ++i) {
+                groups.push({
+                    title: this.sections[i],
+                    status: i,
+                    tasks: getOrderedTasks(grouped[i])
+                })
+            }
             return groups;
         }
     },
+
+    //init the state of the board, connect sync to firebase and wait for it to load
     async created() {
         const collection = `Boards/${this.board}/Tasks`;
-        this.cloudManager = new CloudManager(collection);
+        this.cloudManager.setCollection(collection);
         await this.$bind('documents', db.collection(collection))
         this.isLoading = false
     },
     data() {
         return {
-            documents: [],
+            documents: [], //documents are synced with firebase
             isLoading: true,
+            sections: ['Candidates', 'In Progress', 'QA / Code review', 'Completed'],
+            cloudManager: new CloudManager(),
         };
     },
 });

@@ -5,6 +5,7 @@ import { firestorePlugin } from 'vuefire'
 
 Vue.config.productionTip = false
 
+
 Vue.use(firestorePlugin);
 
 new Vue({

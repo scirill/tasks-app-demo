@@ -1,22 +1,27 @@
 import {db} from '@/db';
 
+/**
+ * Cloud controller to update the db with changes
+ */
 export class CloudManager {
 
     private collection: any;
-    constructor(collection: string) {
+
+    public setCollection(collection: string) {
         this.collection = db.collection(collection);
     }
 
-    public addNewTask(status: number): Promise<any> {
+    public async addNewTask(status: number, description: string): Promise<string> {
         const newTask = {
-            description: 'New Task',
-            timeCreated: Date.now(),
+            description,
             status,
+            timeCreated: Date.now(),
         }
-        return this.collection.add(newTask);
+        const newDoc = await this.collection.add(newTask);
+        return newDoc.id;
     }
 
-    public removeTask(id: string): Promise<any> {
+    public removeTask(id: string): Promise<void> {
         return this.collection.doc(id).delete();
     }
 
@@ -27,7 +32,7 @@ export class CloudManager {
     }
 
     public updateDescription(id: string, description: string) {
-        return this.collection.doc(id).update({
+        return this.collection.doc(id.toString()).update({
             description
         })
     }
