@@ -1,7 +1,7 @@
 <template>
     <v-hover :close-delay="100" :open-delay="100" v-slot="{ hover }">
         <v-card elevation="0" outlined @mouseleave="editMode = false" style="min-height: 100px">
-            <v-card-text @dblclick="editMode = true" >
+            <v-card-text @dblclick="editMode = true">
                 <div v-if="editMode && hover">
                     <v-textarea v-model="descriptionInEditMode"
                                 label="Edit Description"
@@ -15,28 +15,34 @@
                         <v-btn text color="primary" @click="onDescriptionEditCanceled">Cancel</v-btn>
                     </div>
                 </div>
-                <span v-else>{{task.description}}</span>
+                <span v-else>{{ task.description }}</span>
             </v-card-text>
-            <div v-if="hover && !editMode" class="d-flex justify-end" >
+            <div v-if="hover && !editMode" class="d-flex justify-end">
                 <div>
-                    <v-btn v-if="task.status > 0" icon @click="$emit('statusLeft')"><v-icon>mdi-arrow-left</v-icon></v-btn>
-                    <v-btn v-if="task.status < 3" icon @click="$emit('statusRight')"><v-icon>mdi-arrow-right</v-icon></v-btn>
+                    <v-btn v-if="task.status > 0" icon @click="$emit('statusLeft')">
+                        <v-icon>mdi-arrow-left</v-icon>
+                    </v-btn>
+                    <v-btn v-if="task.status < 3" icon @click="$emit('statusRight')">
+                        <v-icon>mdi-arrow-right</v-icon>
+                    </v-btn>
                 </div>
-                <v-btn icon @click="$emit('delete')"><v-icon>mdi-delete</v-icon></v-btn>
+                <v-btn icon @click="$emit('delete')">
+                    <v-icon>mdi-delete</v-icon>
+                </v-btn>
             </div>
         </v-card>
     </v-hover>
 </template>
 
-<script>
+<script lang="ts">
 
 export default {
-  props: {
-    task: {
-      type: Object,
-      default: () => ({})
-    }
-  },
+    props: {
+        task: {
+            type: Object,
+            default: () => ({})
+        }
+    },
     methods: {
         onDescriptionChanged() {
             this.editMode = false;
@@ -51,20 +57,8 @@ export default {
         }
     },
     mounted() {
-      this.descriptionInEditMode = this.task.description;
+        this.descriptionInEditMode = this.task.description;
     },
-    computed: {
-    badgeColor() {
-      const mappings = {
-        Design: "purple",
-        "Feature Request": "teal",
-        Backend: "blue",
-        QA: "green",
-        default: "teal"
-      };
-      return mappings[this.task.type] || mappings.default;
-    }
-  },
     data() {
         return {
             editMode: false,
