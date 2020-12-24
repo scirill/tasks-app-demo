@@ -87,7 +87,6 @@ export default Vue.extend({
             return orderBy(tasks, 'timeCreated');
         }
 
-        // return groups;
         const groups = [{title: 'Candidates', status: 0, tasks: getOrderedTasks(grouped[0])},
             {title: 'In Progress', status: 1, tasks: getOrderedTasks(grouped[1])},
             {title: 'QA / Code review', status: 2, tasks: getOrderedTasks(grouped[2])},
@@ -113,17 +112,4 @@ export default Vue.extend({
 
 <style scoped>
 
-
-/*.column-width {*/
-/*  min-width: 320px;*/
-/*  width: 320px;*/
-/*}*/
-
-/* Unfortunately @apply cannot be setup in codesandbox,
-but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
-/*.ghost-card {*/
-/*  opacity: 0.5;*/
-/*  background: #F7FAFC;*/
-/*  border: 1px solid #4299e1;*/
-/*}*/
 </style>
