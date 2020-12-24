@@ -31,7 +31,7 @@
                         @descriptionChanged="onUpdateDescription"
                         :key="task.id"
                         :task="task"
-                        class="mt-3 cursor-move"
+                        class="mt-3"
                     ></task-card>
                 </v-col>
             </v-row>
@@ -46,10 +46,6 @@ import {db} from '@/db'
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
 import {CloudManager} from '@/helpers/CloudManager';
-
-enum Status {
-    Candidates, InProgress, Review, Completed
-}
 
 export default Vue.extend({
     name: 'Board',
