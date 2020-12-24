@@ -17,15 +17,13 @@
                 </div>
                 <span v-else>{{task.description}}</span>
             </v-card-text>
-            <v-expand-transition>
-                <div v-if="hover && !editMode" class="d-flex justify-end">
-                    <div>
-                        <v-btn v-if="task.status > 0" icon @click="$emit('statusLeft')"><v-icon>mdi-arrow-left</v-icon></v-btn>
-                        <v-btn v-if="task.status < 3" icon @click="$emit('statusRight')"><v-icon>mdi-arrow-right</v-icon></v-btn>
-                    </div>
-                    <v-btn icon @click="$emit('delete')"><v-icon>mdi-delete</v-icon></v-btn>
+            <div v-if="hover && !editMode" class="d-flex justify-end" >
+                <div>
+                    <v-btn v-if="task.status > 0" icon @click="$emit('statusLeft')"><v-icon>mdi-arrow-left</v-icon></v-btn>
+                    <v-btn v-if="task.status < 3" icon @click="$emit('statusRight')"><v-icon>mdi-arrow-right</v-icon></v-btn>
                 </div>
-            </v-expand-transition>
+                <v-btn icon @click="$emit('delete')"><v-icon>mdi-delete</v-icon></v-btn>
+            </div>
         </v-card>
     </v-hover>
 </template>
@@ -33,13 +31,7 @@
 <script>
 
 export default {
-  components: {
-    // Badge
-  },
   props: {
-      value: {
-          type: Object
-      },
     task: {
       type: Object,
       default: () => ({})
