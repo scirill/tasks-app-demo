@@ -4,7 +4,7 @@
             <v-card-text @dblclick="editMode = true">
                 <div v-if="editMode && hover">
                     <v-textarea v-model="descriptionInEditMode"
-                                label="Edit Description"
+                                label="Edit"
                                 auto-grow
                                 outlined
                                 rows="1"
@@ -40,7 +40,6 @@ export default {
     props: {
         task: {
             type: Object,
-            default: () => ({})
         }
     },
     methods: {
