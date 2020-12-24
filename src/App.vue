@@ -9,8 +9,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Board from "./components/Board.vue";
+import Vue from 'vue';
+import Board from '@/components/Board.vue';
 
 
 //Main component to show two board
