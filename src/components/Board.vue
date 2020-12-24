@@ -2,7 +2,16 @@
   <div id="app">
       <v-container fluid>
           <div class="text-lg-h5 pb-3">{{board}} Board</div>
-          <v-row style="min-height: 50vh">
+          <v-row v-if="isLoading">
+              <div class="flex justify-center">
+                  <v-progress-circular
+                      :size="50"
+                      color="primary"
+                      indeterminate
+                  ></v-progress-circular>
+              </div>
+          </v-row>
+          <v-row v-else style="min-height: 50vh">
             <v-col v-for="group in groupedTasks" :key="group.title" class="bg-gray-100 rounded-lg column-width rounded mx-2">
                 <div class="d-flex justify-space-between">
                     <span class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{group.title}}</span>
@@ -87,15 +96,16 @@ export default Vue.extend({
         return groups;
     }
   },
-    created() {
-      const collection = `Boards/${this.board}/Tasks`;
-      this.cloudManager = new CloudManager(collection);
-      this.$bind('documents', db.collection(collection));
+    async created() {
+        const collection = `Boards/${this.board}/Tasks`;
+        this.cloudManager = new CloudManager(collection);
+        await this.$bind('documents', db.collection(collection))
+        this.isLoading = false
     },
   data() {
     return {
         documents: [],
-
+        isLoading: true,
     };
   },
 });
