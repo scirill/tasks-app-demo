@@ -3,6 +3,7 @@
 Demo app for kanban boards, It allows creating and edit tasks for multiple boards,
 with auto-syncing to the db (using firebase).
 Multiple users can use the same boards on different devices at the same time.
+
 How to use:
 - To create new task use the '+' button
 - For each task once hover over, you will see operations options (move task arrows and delete a task),
