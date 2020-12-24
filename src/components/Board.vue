@@ -97,6 +97,7 @@ export default Vue.extend({
                 return orderBy(tasks, 'timeCreated');
             }
 
+            //group all tasks so it will be easy to display
             const groups: TaskGroup[] = [];
             for (let i = 0; i < this.sections.length ; ++i) {
                 groups.push({
