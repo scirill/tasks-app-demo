@@ -12,30 +12,17 @@
 import Vue from "vue";
 import Board from "./components/Board.vue";
 
-interface BoardData {
-    displayName: string;
-    collection: string;
-}
-
 export default Vue.extend({
-  name: "App",
-  components: {
-    Board,
-  },
-
-    computed: {
+    name: 'App',
+    components: {
+        Board,
     },
-
-  methods: {
-
-  },
-  data() {
-    return {
-        boards: ['Sales','RnD']
-    };
-  }
+    data() {
+        return {
+            boards: ['Sales', 'RnD']
+        };
+    }
 });
-
 </script>
 
 <style scoped>
