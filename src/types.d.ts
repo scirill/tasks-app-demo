@@ -10,3 +10,8 @@ interface TaskGroup {
     status: number;
     tasks: Task[];
 }
+
+interface UpdateDescriptionPayload {
+    id: string;
+    description: string;
+}
