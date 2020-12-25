@@ -6,7 +6,7 @@ Multiple users can use the same boards on different devices at the same time.
 
 How to use:
 - To create new task use the '+' button
-- It is possible to drag tasks between the section.
+- It is possible to drag tasks between the sections.
 - For each task once hover over, you will see operations options (move task arrows and delete a task),
   the operations allow to move the task to different section or to delete it completely.  
 - To edit task description, double-click on it.
