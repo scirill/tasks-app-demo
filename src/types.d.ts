@@ -8,6 +8,7 @@ interface Task {
 interface TaskGroup {
     title: string;
     status: number;
+    color: string;
     tasks: Task[];
 }
 

@@ -1,6 +1,6 @@
 <template>
     <v-hover :close-delay="100" :open-delay="100" v-slot="{ hover }">
-        <v-card class="card" elevation="0" outlined @mouseleave="editMode = false">
+        <v-card class="card" elevation="0" @mouseleave="editMode = false">
             <v-card-text @dblclick="editMode = true">
                 <div v-if="editMode && hover">
                     <v-textarea v-model="descriptionInEditMode"
@@ -26,7 +26,7 @@
                     </v-btn>
                 </div>
                 <v-btn icon @click="$emit('delete')">
-                    <v-icon>mdi-delete</v-icon>
+                    <v-icon color="#E8918F">mdi-delete-outline</v-icon>
                 </v-btn>
             </div>
         </v-card>

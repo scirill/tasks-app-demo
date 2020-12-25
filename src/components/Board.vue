@@ -13,14 +13,14 @@
             </v-row>
             <v-row v-else class="board">
                 <v-col v-for="group in groupedTasks" :key="group.title"
-                       class="bg-gray-100 rounded-lg column-width rounded mx-2">
-                    <div class="d-flex justify-space-between">
-                        <span class="text-subtitle-1">{{ group.title }}</span>
+                       class="section rounded-lg column-width rounded mx-2"
+                       :style="{'border-top' : '5px solid ' + group.color}">
+                    <div class="d-flex justify-space-between" >
+                        <span class="text-subtitle-2">{{ group.title }}</span>
                         <v-btn icon @click="onAddNewTask(group.status)">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </div>
-
                     <task-card
                         v-for="(task, index) in group.tasks"
                         v-model="group.tasks[index]"
@@ -103,6 +103,7 @@ export default Vue.extend({
                 groups.push({
                     title: this.sections[i],
                     status: i,
+                    color: this.sectionColors[i],
                     tasks: getOrderedTasks(grouped[i])
                 })
             }
@@ -122,6 +123,7 @@ export default Vue.extend({
             documents: [], //documents are synced with firebase
             isLoading: true,
             sections: ['Candidates', 'In Progress', 'QA / Code review', 'Completed'],
+            sectionColors: ['#DC82A7', '#FD9F6A', '#8BB5F7', '#7AD2C7'],
             cloudManager: new CloudManager(),
         };
     },
@@ -131,6 +133,11 @@ export default Vue.extend({
 <style scoped>
 .board {
     min-height: 50vh;
+}
+
+.section {
+    background-color: #F6F8FC;
+    box-shadow: 2px 2px #E5E9F1;
 }
 
 </style>

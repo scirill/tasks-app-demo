@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-main>
+        <v-main class="app">
             <Board v-for="board in boards"
                    :key="board"
                    :board="board"></Board>
@@ -28,4 +28,9 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+
+.app {
+    background-color: #EEF2F9;
+}
+
 </style>
