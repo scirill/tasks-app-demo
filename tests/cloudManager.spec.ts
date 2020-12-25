@@ -14,7 +14,7 @@ describe('Cloud Manager Tests',  function() {
 
     const description = 'TEST TASK';
     const status = 1;
-    const id = await cloudManger.addNewTask(status, description);
+    const id = await cloudManger.addNewTask(status,0, description);
 
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
     const doc = docRef.data() as Task;
@@ -27,30 +27,32 @@ describe('Cloud Manager Tests',  function() {
   it('Test - remove task', async function () {
     this.timeout(10000);
 
-    const id = await cloudManger.addNewTask(0, 'TEST');
+    const id = await cloudManger.addNewTask(0, 0, 'TEST');
     await cloudManger.removeTask(id);
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
     expect(docRef.data()).to.equal(undefined);
   })
 
-  it('Test - update status', async function () {
+  it('Test - update status and order', async function () {
     this.timeout(10000);
 
     const newStatus = 5;
+    const newOrder = 3;
 
-    const id = await cloudManger.addNewTask(0, 'TEST');
+    const id = await cloudManger.addNewTask(0, 0, 'TEST');
 
-    await cloudManger.updateStatus(id, newStatus);
+    await cloudManger.updateStatus(id, newStatus, newOrder);
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
     const doc = docRef.data() as Task;
     expect(doc.status).to.equal(newStatus);
+    expect(doc.order).to.equal(newOrder);
   })
 
   it('Test - update description', async function () {
     this.timeout(10000);
 
     const newDescription = 'NEW DESCRIPTION';
-    const id = await cloudManger.addNewTask(0, 'TEMP');
+    const id = await cloudManger.addNewTask(0, 0, 'TEMP');
 
     await cloudManger.updateDescription(id, newDescription);
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();

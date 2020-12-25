@@ -11,10 +11,11 @@ export class CloudManager {
         this.collection = db.collection(collection);
     }
 
-    public async addNewTask(status: number, description: string): Promise<string> {
+    public async addNewTask(status: number, order: number, description: string): Promise<string> {
         const newTask = {
             description,
             status,
+            order,
             timeCreated: Date.now(),
         }
         const newDoc = await this.collection.add(newTask);
@@ -25,9 +26,10 @@ export class CloudManager {
         return this.collection.doc(id).delete();
     }
 
-    public updateStatus(id: string, status: number) {
+    public updateStatus(id: string, status: number, order: number) {
         return this.collection.doc(id).update({
-            status
+            status,
+            order
         })
     }
 

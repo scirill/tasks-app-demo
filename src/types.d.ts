@@ -1,6 +1,7 @@
 interface Task {
     id: string;
     timeCreated: number;
+    order: number;
     description: string;
     status: Status;
 }

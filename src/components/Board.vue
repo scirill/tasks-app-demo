@@ -21,17 +21,20 @@
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </div>
-                    <task-card
-                        v-for="(task, index) in group.tasks"
-                        v-model="group.tasks[index]"
-                        @statusRight="onStatusRight(group.tasks[index])"
-                        @statusLeft="onStatusLeft(group.tasks[index])"
-                        @delete="onDeleteTask(group.tasks[index])"
-                        @descriptionChanged="onUpdateDescription"
-                        :key="task.id"
-                        :task="task"
-                        class="mt-3"
-                    ></task-card>
+                    <draggable :list="group.tasks" :animation="200" ghost-class="ghost-card"
+                               group="tasks" @end="updateTasksStatesAndOrder">
+                        <task-card
+                            v-for="(task, index) in group.tasks"
+                            v-model="group.tasks[index]"
+                            @statusRight="onStatusRight(group.tasks[index])"
+                            @statusLeft="onStatusLeft(group.tasks[index])"
+                            @delete="onDeleteTask(group.tasks[index])"
+                            @descriptionChanged="onUpdateDescription"
+                            :key="task.id"
+                            :task="task"
+                            class="mt-3">
+                        </task-card>
+                    </draggable>
                 </v-col>
             </v-row>
         </v-container>
@@ -42,9 +45,11 @@
 import Vue from 'vue';
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
-import TaskCard from './TaskCard.vue';
-import {CloudManager} from '@/helpers/CloudManager';
+import draggable from 'vuedraggable';
+import TaskCard from '@/components/TaskCard.vue';
 import {db} from '@/db'
+import {CloudManager} from '@/helpers/CloudManager';
+import {getChangedTasks} from "@/helpers/OrderDetectionHelper";
 
 
 /**
@@ -56,45 +61,21 @@ import {db} from '@/db'
 export default Vue.extend({
     name: 'Board',
     components: {
-        TaskCard,
+        TaskCard, draggable
     },
     props: {
         board: {
             type: String,
         },
     },
-    methods: {
-        onAddNewTask(status: number) {
-            this.cloudManager.addNewTask(status, 'New Task');
-        },
-        onStatusRight(task: Task) {
-            if (task.status < this.sections.length - 1) {
-                this.cloudManager.updateStatus(task.id, task.status.valueOf() + 1);
-            }
-        },
-        onStatusLeft(task: Task) {
-            if (task.status > 0) {
-                this.cloudManager.updateStatus(task.id, task.status.valueOf() - 1);
-            }
-        },
-        onDeleteTask(task: Task) {
-            this.cloudManager.removeTask(task.id);
-        },
-        onUpdateDescription(payload: UpdateDescriptionPayload) {
-            this.cloudManager.updateDescription(payload.id, payload.description);
-        },
-    },
-
-    computed: {
-        //return the grouped tasks to display, each group has name of the section and its relevant tasks
-        groupedTasks(): TaskGroup[] {
-
+    watch: {
+        documents() {
             //first group all the tasks by status
             const grouped = groupBy(this.documents, 'status');
 
-            //sort the task by the time created
+            //sort the task by the order
             function getOrderedTasks(tasks: Task[] = []) {
-                return orderBy(tasks, 'timeCreated');
+                return orderBy(tasks, 'order');
             }
 
             //group all tasks so it will be easy to display
@@ -107,8 +88,38 @@ export default Vue.extend({
                     tasks: getOrderedTasks(grouped[i])
                 })
             }
-            return groups;
-        }
+            this.groupedTasks = groups;
+        },
+    },
+    methods: {
+        updateTasksStatesAndOrder() {
+            const changedTasks = getChangedTasks(this.documents, this.groupedTasks);
+
+            for (const task of changedTasks) {
+                this.cloudManager.updateStatus(task.id, task.status, task.order);
+            }
+        },
+        onAddNewTask(status: number) {
+            this.cloudManager.addNewTask(status, this.groupedTasks[status].tasks.length, 'New Task');
+        },
+        onStatusRight(task: Task) {
+            if (task.status < this.sections.length - 1) {
+                const newStatus = task.status.valueOf() + 1;
+                this.cloudManager.updateStatus(task.id, newStatus, this.groupedTasks[newStatus].tasks.length);
+            }
+        },
+        onStatusLeft(task: Task) {
+            if (task.status > 0) {
+                const newStatus = task.status.valueOf() - 1;
+                this.cloudManager.updateStatus(task.id, newStatus, this.groupedTasks[newStatus].tasks.length);
+            }
+        },
+        onDeleteTask(task: Task) {
+            this.cloudManager.removeTask(task.id);
+        },
+        onUpdateDescription(payload: UpdateDescriptionPayload) {
+            this.cloudManager.updateDescription(payload.id, payload.description);
+        },
     },
 
     //init the state of the board, connect sync to firebase and wait for it to load
@@ -125,6 +136,7 @@ export default Vue.extend({
             sections: ['Candidates', 'In Progress', 'QA / Code review', 'Completed'],
             sectionColors: ['#DC82A7', '#FD9F6A', '#8BB5F7', '#7AD2C7'],
             cloudManager: new CloudManager(),
+            groupedTasks: [] as TaskGroup[],
         };
     },
 });
@@ -138,6 +150,12 @@ export default Vue.extend({
 .section {
     background-color: #F6F8FC;
     box-shadow: 2px 2px #E5E9F1;
+}
+
+.ghost-card {
+    opacity: 0.5;
+    background: #F7FAFC;
+    border: 1px solid #4299e1;
 }
 
 </style>
