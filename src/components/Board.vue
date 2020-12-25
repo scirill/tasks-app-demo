@@ -12,29 +12,31 @@
                 </div>
             </v-row>
             <v-row v-else class="board">
-                <v-col v-for="group in groupedTasks" :key="group.title"
-                       class="section rounded-lg column-width rounded mx-2"
-                       :style="{'border-top' : '5px solid ' + group.color}">
-                    <div class="d-flex justify-space-between" >
-                        <span class="text-subtitle-2">{{ group.title }}</span>
-                        <v-btn icon @click="onAddNewTask(group.status)">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
+                <v-col v-for="group in groupedTasks" :key="group.title" cols="12" sm="3">
+                    <div class="section rounded-lg rounded pa-3"
+                         :style="{'border-top' : '5px solid ' + group.color}">
+                        <div class="d-flex justify-space-between" >
+                            <span class="text-subtitle-2">{{ group.title }}</span>
+                            <v-btn icon @click="onAddNewTask(group.status)">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </div>
+                        <draggable :list="group.tasks" :animation="200" ghost-class="ghost-card"
+                                   group="tasks" @end="updateTasksStatesAndOrder">
+                            <task-card
+                                v-for="(task, index) in group.tasks"
+                                v-model="group.tasks[index]"
+                                @statusRight="onStatusRight(group.tasks[index])"
+                                @statusLeft="onStatusLeft(group.tasks[index])"
+                                @delete="onDeleteTask(group.tasks[index])"
+                                @descriptionChanged="onUpdateDescription"
+                                :key="task.id"
+                                :task="task"
+                                class="mt-3">
+                            </task-card>
+                        </draggable>
                     </div>
-                    <draggable :list="group.tasks" :animation="200" ghost-class="ghost-card"
-                               group="tasks" @end="updateTasksStatesAndOrder">
-                        <task-card
-                            v-for="(task, index) in group.tasks"
-                            v-model="group.tasks[index]"
-                            @statusRight="onStatusRight(group.tasks[index])"
-                            @statusLeft="onStatusLeft(group.tasks[index])"
-                            @delete="onDeleteTask(group.tasks[index])"
-                            @descriptionChanged="onUpdateDescription"
-                            :key="task.id"
-                            :task="task"
-                            class="mt-3">
-                        </task-card>
-                    </draggable>
+
                 </v-col>
             </v-row>
         </v-container>
@@ -150,6 +152,7 @@ export default Vue.extend({
 .section {
     background-color: #F6F8FC;
     box-shadow: 2px 2px #E5E9F1;
+    min-height: 50vh;
 }
 
 .ghost-card {
