@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-container fluid>
-            <div class="text-lg-h5 pb-3">{{ board }} Board</div>
+            <div class="text-lg-h5 pb-3">{{ board }} Board </div>
             <v-row v-if="isLoading">
                 <div class="flex justify-center">
                     <v-progress-circular
