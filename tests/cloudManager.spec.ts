@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import {CloudManager} from '@/helpers/CloudManager';
 import {db} from '@/db';
+import {getRandomUser} from "@/helpers/UsersManagment";
 
 const TEST_COLLECTION = 'BoardsTest/Test/Tasks';
 
@@ -14,7 +15,7 @@ describe('Cloud Manager Tests',  function() {
 
     const description = 'TEST TASK';
     const status = 1;
-    const id = await cloudManger.addNewTask(status,0, description);
+    const id = await cloudManger.addNewTask(status,0, getRandomUser(), description);
 
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
     const doc = docRef.data() as Task;
@@ -27,7 +28,7 @@ describe('Cloud Manager Tests',  function() {
   it('Test - remove task', async function () {
     this.timeout(10000);
 
-    const id = await cloudManger.addNewTask(0, 0, 'TEST');
+    const id = await cloudManger.addNewTask(0, 0,getRandomUser(), 'TEST');
     await cloudManger.removeTask(id);
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
     expect(docRef.data()).to.equal(undefined);
@@ -39,7 +40,7 @@ describe('Cloud Manager Tests',  function() {
     const newStatus = 5;
     const newOrder = 3;
 
-    const id = await cloudManger.addNewTask(0, 0, 'TEST');
+    const id = await cloudManger.addNewTask(0, 0, getRandomUser(), 'TEST');
 
     await cloudManger.updateStatus(id, newStatus, newOrder);
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
@@ -52,7 +53,7 @@ describe('Cloud Manager Tests',  function() {
     this.timeout(10000);
 
     const newDescription = 'NEW DESCRIPTION';
-    const id = await cloudManger.addNewTask(0, 0, 'TEMP');
+    const id = await cloudManger.addNewTask(0, 0,getRandomUser(), 'TEMP');
 
     await cloudManger.updateDescription(id, newDescription);
     const docRef = await db.collection(TEST_COLLECTION).doc(id).get();
