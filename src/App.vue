@@ -21,7 +21,7 @@ export default Vue.extend({
     },
     data() {
         return {
-            boards: ['Sales', 'RnD']
+            boards: ['RnD', 'Sales']
         };
     }
 });

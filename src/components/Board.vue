@@ -16,7 +16,7 @@
                     <div class="section rounded-lg rounded pa-3"
                          :style="{'border-top' : '5px solid ' + group.color}">
                         <div class="d-flex justify-space-between" >
-                            <span class="text-subtitle-2">{{ group.title }}</span>
+                            <span class="text-subtitle-2">{{ group.title }} <span class="grey--text">({{group.tasks.length}})</span></span>
                             <v-btn icon @click="onAddNewTask(group.status)">
                                 <v-icon>mdi-plus</v-icon>
                             </v-btn>
@@ -25,7 +25,6 @@
                                    group="tasks" @end="updateTasksStatesAndOrder">
                             <task-card
                                 v-for="(task, index) in group.tasks"
-                                v-model="group.tasks[index]"
                                 @statusRight="onStatusRight(group.tasks[index])"
                                 @statusLeft="onStatusLeft(group.tasks[index])"
                                 @delete="onDeleteTask(group.tasks[index])"
@@ -36,7 +35,6 @@
                             </task-card>
                         </draggable>
                     </div>
-
                 </v-col>
             </v-row>
         </v-container>
@@ -52,6 +50,7 @@ import TaskCard from '@/components/TaskCard.vue';
 import {db} from '@/db'
 import {CloudManager} from '@/helpers/CloudManager';
 import {getChangedTasks} from "@/helpers/OrderDetectionHelper";
+import {getRandomUser} from "@/helpers/UsersManagment";
 
 
 /**
@@ -69,6 +68,9 @@ export default Vue.extend({
         board: {
             type: String,
         },
+        user: {
+            type: Object,
+        }
     },
     watch: {
         documents() {
@@ -102,7 +104,7 @@ export default Vue.extend({
             }
         },
         onAddNewTask(status: number) {
-            this.cloudManager.addNewTask(status, this.groupedTasks[status].tasks.length, 'New Task');
+            this.cloudManager.addNewTask(status, this.groupedTasks[status].tasks.length, getRandomUser(), 'New Task');
         },
         onStatusRight(task: Task) {
             if (task.status < this.sections.length - 1) {

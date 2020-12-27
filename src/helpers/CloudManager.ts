@@ -11,11 +11,12 @@ export class CloudManager {
         this.collection = db.collection(collection);
     }
 
-    public async addNewTask(status: number, order: number, description: string): Promise<string> {
+    public async addNewTask(status: number, order: number, user: User, description: string): Promise<string> {
         const newTask = {
             description,
             status,
             order,
+            user,
             timeCreated: Date.now(),
         }
         const newDoc = await this.collection.add(newTask);

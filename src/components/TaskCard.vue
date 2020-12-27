@@ -4,9 +4,8 @@
             <v-card-text @dblclick="editMode = true">
                 <div v-if="editMode && hover">
                     <v-textarea v-model="descriptionInEditMode"
-                                label="Edit"
+                                label="Edit description"
                                 auto-grow
-                                outlined
                                 rows="1">
                     </v-textarea>
                     <div class="d-flex justify-end">
@@ -14,7 +13,16 @@
                         <v-btn text color="primary" @click="onDescriptionEditCanceled">Cancel</v-btn>
                     </div>
                 </div>
-                <p v-else>{{ task.description }}</p>
+                <p v-else class="grey--text text--darken-3">{{ task.description }}</p>
+                <div class="grey--text">
+                    <v-avatar
+                        :color="task.user.avatarColor"
+                        size="30">
+                        <span class="white--text">{{ task.user.name }}</span>
+                    </v-avatar>
+                    <v-icon class="pl-2" color="#9E9E9E">mdi-calendar-range</v-icon>
+                    {{dateCreated}}
+                </div>
             </v-card-text>
             <div v-if="hover && !editMode" class="d-flex justify-end">
                 <div>
@@ -46,6 +54,13 @@ export default Vue.extend({
             type: Object,
         }
     },
+    computed: {
+        dateCreated() {
+            const task = this.task as Task;
+            const date = new Date(task.timeCreated);
+            return `${date.toDateString()}`;
+        }
+    },
     methods: {
         onDescriptionChanged() {
             this.editMode = false;
@@ -66,7 +81,7 @@ export default Vue.extend({
     data() {
         return {
             editMode: false,
-            descriptionInEditMode: ''
+            descriptionInEditMode: '',
         }
     },
 });

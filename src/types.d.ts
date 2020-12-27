@@ -4,6 +4,7 @@ interface Task {
     order: number;
     description: string;
     status: Status;
+    user: User;
 }
 
 interface TaskGroup {
@@ -11,6 +12,11 @@ interface TaskGroup {
     status: number;
     color: string;
     tasks: Task[];
+}
+
+interface User {
+    name: string;
+    avatarColor: string;
 }
 
 interface UpdateDescriptionPayload {
